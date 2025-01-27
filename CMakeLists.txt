@@ -15,6 +15,13 @@ file(GLOB_RECURSE SOURCES
     ${CMAKE_SOURCE_DIR}/src/*.cc
 )
 
+file(GLOB_RECURSE DRIVERS 
+    ${CMAKE_SOURCE_DIR}/drivers/src/*.c
+    ${CMAKE_SOURCE_DIR}/drivers/src/*.cpp
+    ${CMAKE_SOURCE_DIR}/drivers/src/*.cc
+)
+
+
 
 # Create the main executable target
 add_executable(${PROJECT_NAME})
@@ -23,12 +30,14 @@ add_executable(${PROJECT_NAME})
 target_sources( ${PROJECT_NAME} PRIVATE
     ${SOURCES}
     ${STARTUP_FILE}
+    ${DRIVERS}
 )
 
 # Include directories
 target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_SOURCE_DIR}/Core/CMSIS/Include
     ${CMAKE_SOURCE_DIR}/Core/CMSIS/Device
+    ${CMAKE_SOURCE_DIR}/drivers/inc
 )
 
 
