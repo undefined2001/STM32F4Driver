@@ -10,14 +10,12 @@ gpio led{gpio::create(GPIOA, gpio::pins::pin5)};
 int main()
 {
     rcc::enable_gpio(GPIOA);
-    led.set_mode(gpio::mode::output);
+
+    led.config(gpio::mode::output, gpio::otype::push_pull, gpio::pupd::none, gpio::ospeed::high);
 
     for (;;)
     {
-        led.set_value(gpio::value::high);
-        for (int i = 0; i < 500000; i++)
-            ;
-        led.set_value(gpio::value::low);
+        led.toggle();
         for (int i = 0; i < 500000; i++)
             ;
     }

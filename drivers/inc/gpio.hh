@@ -2,47 +2,44 @@
 #define __GPIO_HH__
 
 #include "stm32f446xx.h"
-
-#define REG_MSK_2BITS(pos) (~(3u << (pos)))
+#include "common.hh"
 
 namespace hardware
 {
     class gpio
     {
     public:
-        enum class mode // enum for all the mode of stm32f4
+        enum class mode : uint32_t
         {
-            input = 0u,
-            output = 1u,
-            altfn = 2u,
-            analog = 3u
+            input = 0b00,
+            output = 0b01,
+            alternate = 0b10,
+            analog = 0b11
         };
-        enum class pupd // enum for all the pullup/down options of stm32f4
+        enum class pupd : uint32_t
         {
-            nopupd = 0u,
-            pullup = 1u,
-            pulldown = 2u,
-
+            none = 0b00,
+            pullup = 0b01,
+            pulldown = 0b10,
+            reserved = 0b11
         };
-        enum class otype // enum for all the otype for stm32f4
+        enum class ospeed : uint32_t
         {
-            open_drain = 0u,
-            push_pull = 1u
+            low = 0b00,    // Low speed
+            medium = 0b01, // Medium speed
+            fast = 0b10,   // High speed
+            high = 0b11    // Very high speed
         };
-        enum class ospeed // enum for all the ospeed options for stm32f4
+        enum class otype : uint32_t
         {
-            low = 0u,
-            medium = 1u,
-            fast = 2u,
-            high = 3u
+            push_pull = 0,
+            open_drain = 1
         };
-
-        enum class value // enum for stm32f4 pin state
+        enum class value : uint32_t
         {
-            low = 0u,
-            high = 1u
+            low = 0,
+            high = 1
         };
-
         enum class pins
         {
             pin0 = 0u,
@@ -64,16 +61,23 @@ namespace hardware
 
         };
 
-    public:
         static gpio create(GPIO_TypeDef *port, pins pin);
+
+        void config(mode _m, otype _ot, pupd _p, ospeed _os);
         void set_mode(mode _m);
+        void set_pupd(pupd _p);
+        void set_otype(otype _ot);
+        void set_ospeed(ospeed _os);
         void set_value(value _v);
+        void toggle();
+        value read() const;
 
     private:
-        GPIO_TypeDef *m_port;
-        uint8_t m_pin;
         gpio(GPIO_TypeDef *port, pins pin);
+        GPIO_TypeDef *m_port;
+        uint32_t m_pin;
     };
+
 }
 
 #endif

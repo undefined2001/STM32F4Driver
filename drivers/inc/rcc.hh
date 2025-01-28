@@ -1,5 +1,5 @@
-#ifndef __RCC_H__
-#define __RCC_H__
+#ifndef __RCC_HH__
+#define __RCC_HH__
 #include "stm32f446xx.h"
 
 namespace hardware
