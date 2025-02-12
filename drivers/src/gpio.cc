@@ -1,5 +1,5 @@
 #include "gpio.hh"
-
+#include <type_traits>
 using namespace hardware;
 
 gpio gpio::create(GPIO_TypeDef *port, pins pin)
@@ -8,7 +8,7 @@ gpio gpio::create(GPIO_TypeDef *port, pins pin)
 }
 
 // Implementation
-gpio::gpio(GPIO_TypeDef *port, pins pin) : m_port(port), m_pin(static_cast<uint32_t>(pin))
+gpio::gpio(GPIO_TypeDef *port, pins pin) : m_port(port), m_pin(static_cast<std::underlying_type_t<pins>>(pin))
 {
     if (m_port == nullptr || m_pin > 15)
     {
@@ -20,7 +20,7 @@ void gpio::set_mode(mode _m)
 {
     uint32_t mask = 0b11 << (m_pin * 2);
     CLEAR_BITS(m_port->MODER, mask);
-    SET_BITS(m_port->MODER, mask, static_cast<uint32_t>(_m) << (m_pin * 2));
+    SET_BITS(m_port->MODER, mask, static_cast<std::underlying_type_t<mode>>(_m) << (m_pin * 2));
 }
 
 void gpio::set_pupd(pupd _p)
